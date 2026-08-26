@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Наше приложение
-    'users',  # <--- ЭТО ДОБАВИТЬ!
+    'users',
+    'content',
 ]
 
 MIDDLEWARE = [
