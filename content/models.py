@@ -70,7 +70,7 @@ class Question(models.Model):
         verbose_name="Содержимое"
     )
     text = models.TextField(verbose_name="Текст вопроса")
-    answer = models.TextField(blank=True, null=True, verbose_name="Ответ")
+    answer = models.TextField(blank=True, default='', verbose_name="Ответ")
     created_by = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

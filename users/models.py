@@ -1,9 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 class User(AbstractUser):
     # добавляем поле, если нужно
-    bio = models.TextField(blank=True, null=True)
+    bio = models.TextField(blank=True, default='', verbose_name="Био")
 
     def __str__(self):
         return self.username
