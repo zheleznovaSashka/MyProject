@@ -58,3 +58,32 @@ class Content(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# ⚠️ ВАЖНО: Question должен быть ОТДЕЛЬНЫМ классом, НЕ вложенным!
+class Question(models.Model):
+    """Модель вопросов"""
+    content = models.ForeignKey(
+        Content,  # <--- теперь можно без кавычек, т.к. Content уже определён
+        on_delete=models.CASCADE,
+        related_name='questions',
+        verbose_name="Содержимое"
+    )
+    text = models.TextField(verbose_name="Текст вопроса")
+    answer = models.TextField(blank=True, null=True, verbose_name="Ответ")
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='questions',
+        verbose_name="Создатель"
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+
+    class Meta:
+        verbose_name = "Вопрос"
+        verbose_name_plural = "Вопросы"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Вопрос к {self.content.title}: {self.text[:50]}..."

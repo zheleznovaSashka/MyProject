@@ -27,6 +27,11 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+htmlcov/
+.coverage
+.pytest_cache/
+test_db.sqlite3
+
 # Миграции (опционально, можно не добавлять)
 # */migrations/*.py
 # !*/migrations/__init__.py

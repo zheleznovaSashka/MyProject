@@ -1,9 +1,8 @@
 from rest_framework import serializers
-from .models import Category, Content
+from .models import Category, Content, Question
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    """Сериализатор для разделов"""
     contents_count = serializers.IntegerField(
         source='contents.count',
         read_only=True
@@ -15,7 +14,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ContentSerializer(serializers.ModelSerializer):
-    """Сериализатор для содержимого"""
     author_username = serializers.CharField(
         source='author.username',
         read_only=True
@@ -36,14 +34,39 @@ class ContentSerializer(serializers.ModelSerializer):
 
 
 class ContentCreateUpdateSerializer(serializers.ModelSerializer):
-    """Сериализатор для создания/обновления содержимого"""
-
     class Meta:
         model = Content
         fields = ['id', 'title', 'body', 'category', 'status']
 
     def create(self, validated_data):
-        # Автоматически устанавливаем автора
         request = self.context.get('request')
         validated_data['author'] = request.user
+        return super().create(validated_data)
+
+
+# ⚠️ ВАЖНО: ЭТИ КЛАССЫ ДОЛЖНЫ БЫТЬ!
+class QuestionSerializer(serializers.ModelSerializer):
+    """Сериализатор для вопросов"""
+    content_title = serializers.CharField(source='content.title', read_only=True)
+    created_by_username = serializers.CharField(source='created_by.username', read_only=True)
+
+    class Meta:
+        model = Question
+        fields = [
+            'id', 'content', 'content_title', 'text', 'answer',
+            'created_by', 'created_by_username', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['created_by', 'created_at', 'updated_at']
+
+
+class QuestionCreateUpdateSerializer(serializers.ModelSerializer):
+    """Сериализатор для создания/обновления вопросов"""
+
+    class Meta:
+        model = Question
+        fields = ['id', 'content', 'text', 'answer']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        validated_data['created_by'] = request.user
         return super().create(validated_data)
